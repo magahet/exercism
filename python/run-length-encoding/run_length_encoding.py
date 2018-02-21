@@ -1,40 +1,25 @@
 def decode(string):
+    message = ''
+    num = ''
+    for char in string:
+        if char.isdigit():
+            num += char
+        else:
+            message += char * int(num) if num else char
+            num = ''
 
-    def iter_next_char(chars):
-        num = ''
-        for char in chars:
-            if char.isdigit():
-                num += char
-            elif num:
-                yield char * int(num)
-                num = ''
-            else:
-                yield char
-
-    return ''.join(iter_next_char(string))
+    return message
 
 
-def encode(string):
-
-    def iter_next_char_count(chars):
-        next_char = chars.pop(0)
-        offset = -1
-        for idx, char in enumerate(chars):
-            if next_char == char:
-                continue
-
-            yield str(idx - offset), next_char
-
-            offset = idx
-            next_char = char
-
-        if char == next_char:
-            yield str(idx - offset + 1), next_char
-
+def encode(string, count=1):
     if not string:
-        return string
+        return ''
 
-    return ''.join([
-        r[1] if r[0] == '1' else ''.join(r)
-        for r in iter_next_char_count(list(string))
-    ])
+    prefix = str(count) if count > 1 else ''
+
+    if len(string) == 1:
+        return ''.join([prefix, string[0]])
+    elif string[0] == string[1]:
+        return encode(string[1:], count + 1)
+    else:
+        return ''.join([prefix, string[0], encode(string[1:])])
