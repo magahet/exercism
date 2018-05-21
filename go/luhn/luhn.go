@@ -26,7 +26,7 @@ func Valid(input string) bool {
 	}
 
 	var sum, n int
-	for i, _ := range numbers {
+	for i := range numbers {
 		n = numbers[len(numbers)-1-i]
 		if i%2 == 1 {
 			n = n * 2
